@@ -1,0 +1,8 @@
+concept_id,name,form,play_method,primary_model,creative_hook,first_target,prototype_notes
+VF-01,Seed Vessel,Asymmetric seed pod,fipple,Single Helmholtz,Organic small flute with 4-hole pentatonic scale,A4 to E5,Best first vessel-flute prototype.
+VF-02,Water Bird,Small rounded pod with fill port,fipple plus water,Variable-volume Helmholtz,Pitch bends by changing water volume,TBD,Start as sound effect then tune a narrow range.
+VF-03,Double Pod,Two connected bulbs,fipple,Coupled Helmholtz,Two chamber colors from one breath,TBD,Needs coupled-mode measurement.
+VF-04,Drone Vessel,Melody bulb plus drone bulb,fipple,Coupled Helmholtz,Native-flute-like drone in ceramic vessel form,TBD,Design drone as fixed port first.
+VF-05,Transverse Vessel,Sculptural side-blown vessel,blow-across edge,Edge tone plus Helmholtz,Transverse flute gesture without long bore,TBD,Higher risk because embouchure physics dominates.
+VF-06,Hand-Wah Vessel,Udu/ocarina hybrid,fipple plus palm port,Variable-port Helmholtz,Hand opens a port for wah effects,TBD,Good bridge from udu experiments.
+VF-07,Shell Labyrinth,Folded shell-like chamber,fipple,Measured-volume Helmholtz,Complex outside shape with simple acoustic volume,TBD,Great 3D mold showcase if release is solved.

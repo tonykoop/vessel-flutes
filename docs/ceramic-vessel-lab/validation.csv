@@ -1,0 +1,9 @@
+build_id,variant,stage,date,clay_body,shrinkage_expected_pct,master_scale_factor,cad_volume_cm3,measured_volume_cm3,wall_thickness_cm,voicing_w_cm,voicing_h_cm,hole_pattern,target_note,target_freq_hz,measured_freq_hz,cents_error,response_score,tone_notes,action
+VF-01-P1,Seed,greenware,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
+VF-01-P1,Seed,bisque,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
+VF-01-P1,Seed,glaze_fire,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
+VF-01-P2,Seed,bisque,,,,,TBD,TBD,TBD,TBD,TBD,hole_1,TBD,TBD,,,,,
+VF-02-P1,Water Bird,bisque,,,,,TBD,TBD,TBD,TBD,TBD,water_0ml,TBD,TBD,,,,,
+VF-02-P1,Water Bird,bisque,,,,,TBD,TBD,TBD,TBD,TBD,water_10ml,TBD,TBD,,,,,
+VF-03-P1,Double Pod,bisque,,,,,TBD,TBD,TBD,TBD,TBD,mode_1,TBD,TBD,,,,,
+VF-03-P1,Double Pod,bisque,,,,,TBD,TBD,TBD,TBD,TBD,mode_2,TBD,TBD,,,,,
