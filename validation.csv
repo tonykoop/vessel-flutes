@@ -1,9 +1,11 @@
-build_id,variant,stage,date,clay_body,shrinkage_expected_pct,master_scale_factor,cad_volume_cm3,measured_volume_cm3,wall_thickness_cm,voicing_w_cm,voicing_h_cm,hole_pattern,target_note,target_freq_hz,measured_freq_hz,cents_error,response_score,tone_notes,action
-VF-01-P1,Seed,greenware,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
-VF-01-P1,Seed,bisque,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
-VF-01-P1,Seed,glaze_fire,,,,,130,TBD,TBD,TBD,TBD,all_closed,A4,440,,,,,
-VF-01-P2,Seed,bisque,,,,,TBD,TBD,TBD,TBD,TBD,hole_1,TBD,TBD,,,,,
-VF-02-P1,Water Bird,bisque,,,,,TBD,TBD,TBD,TBD,TBD,water_0ml,TBD,TBD,,,,,
-VF-02-P1,Water Bird,bisque,,,,,TBD,TBD,TBD,TBD,TBD,water_10ml,TBD,TBD,,,,,
-VF-03-P1,Double Pod,bisque,,,,,TBD,TBD,TBD,TBD,TBD,mode_1,TBD,TBD,,,,,
-VF-03-P1,Double Pod,bisque,,,,,TBD,TBD,TBD,TBD,TBD,mode_2,TBD,TBD,,,,,
+check,target,method,tool,actual,pass,notes
+Wet cavity volume,130 cc +/- 5 cc,water fill before drying,graduated cylinder,pending,pending,Record before shrinkage
+Dry/fired shrinkage,measured percent on test tiles,measure before/after firing,caliper,pending,pending,Required before mold claims
+Voicing first sound,stable tone at low and medium breath,play test,shop notes,pending,pending,Fix voicing before drilling scale
+Fundamental A4,440 Hz +/- 20 cents before tone holes,tuner at room temp,tuner,pending,pending,Adjust voicing or volume if far off
+Hole 1 B4,493.88 Hz +/- 10 cents after tuning,undersize drill then enlarge,tuner,pending,pending,Record final diameter
+Hole 2 C#5,554.37 Hz +/- 10 cents after tuning,undersize drill then enlarge,tuner,pending,pending,Track cumulative area
+Hole 3 E5,659.25 Hz +/- 10 cents after tuning,undersize drill then enlarge,tuner,pending,pending,Check hand coverage
+Hole 4 F#5,739.99 Hz +/- 10 cents after tuning,undersize drill then enlarge,tuner,pending,pending,Watch tone stability
+Octave A5,880 Hz response check,overblow and fingering test,tuner,pending,pending,Do not overclaim if unstable
+Leak check,no leaks around seam or voicing,water/air leak test,visual/play test,pending,pending,Seal prototype before judging pitch
