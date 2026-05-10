@@ -1,0 +1,744 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Vessel Flutes Build Packet</title><style>
+body { font-family: Arial, sans-serif; color: #111; line-height: 1.35; max-width: 900px; margin: 32px auto; }
+h1 { font-size: 28px; border-bottom: 2px solid #222; padding-bottom: 6px; }
+h2 { font-size: 22px; margin-top: 28px; }
+h3 { font-size: 18px; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 12px; }
+th, td { border: 1px solid #888; padding: 6px; vertical-align: top; }
+th { background: #e8eef8; }
+pre { white-space: pre-wrap; background: #f5f5f5; padding: 10px; border: 1px solid #ddd; }
+.page-break { page-break-before: always; break-before: page; }
+@media print { body { margin: 0.5in; max-width: none; } a { color: #111; } }
+</style></head><body>
+<h1>Vessel Flutes Build Packet Print Packet</h1>
+
+<p>Generated: 2026-05-09</p>
+<p>Packet folder: `/tmp/vessel-flutes-codex-bob-r3-build-packet`</p>
+
+<h2>File Map</h2>
+
+<table>
+<tr><th>File</th><th>Purpose</th></tr>
+<tr><td>`design.md`</td><td>Project intent, catalog metadata, assumptions, and validation plan.</td></tr>
+<tr><td>`bom.csv`</td><td>Starter bill of materials with part categories, quantities, drawing refs, and notes.</td></tr>
+<tr><td>`sourcing.csv`</td><td>Supplier/search tracker with specs, price/date fields, lead time, substitutes, and risks.</td></tr>
+<tr><td>`cut-list.csv`</td><td>Rough/final stock sizes, material, grain/orientation, operations, yield, and offcuts.</td></tr>
+<tr><td>`drawing-brief.md`</td><td>Manufacturing drawing and technical product sketch brief.</td></tr>
+<tr><td>`assembly-manual.md`</td><td>Shop-facing sequence, tools, fixtures, safety, tuning, finishing, and maintenance notes.</td></tr>
+<tr><td>`validation.csv`</td><td>Target/measured values, tolerance, environment, result, and tuning/build action log.</td></tr>
+<tr><td>`supplier-rfq.md`</td><td>Supplier email/request-for-quote starter.</td></tr>
+<tr><td>`visual-bom-brief.md`</td><td>Art direction for an image-forward visual BOM.</td></tr>
+<tr><td>`wolfram-starter.wl`</td><td>Wolfram starter for physics, optimization, visualization, and validation.</td></tr>
+<tr><td>`CHECKLIST.md`</td><td>Project artifact.</td></tr>
+<tr><td>`README.md`</td><td>Project artifact.</td></tr>
+<tr><td>`concept-matrix.csv`</td><td>Project artifact.</td></tr>
+<tr><td>`experiments.csv`</td><td>Project artifact.</td></tr>
+<tr><td>`family-spec.csv`</td><td>Project artifact.</td></tr>
+<tr><td>`jig-decision.md`</td><td>Project artifact.</td></tr>
+<tr><td>`mold-workflow.md`</td><td>Project artifact.</td></tr>
+<tr><td>`photo-shotlist.md`</td><td>Project artifact.</td></tr>
+<tr><td>`resources.md`</td><td>Project artifact.</td></tr>
+<tr><td>`review-evidence.md`</td><td>Project artifact.</td></tr>
+<tr><td>`risks.md`</td><td>Project artifact.</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>design.md</h2>
+
+<p>Project intent, catalog metadata, assumptions, and validation plan.</p>
+
+<h1>Design</h1>
+
+<h2>Design Intent</h2>
+
+<p>Create an L2 root-mode build packet for vessel flutes whose pitch behavior is</p>
+<p>set by Helmholtz resonance. The first prototype is a 130 cc ceramic ocarina lab</p>
+<p>body with a conservative voicing and undersize finger holes. The purpose is to</p>
+<p>validate cavity volume, voicing response, cumulative hole area, and shrinkage</p>
+<p>before committing to a polished slip-cast family.</p>
+
+<p>This packet supports issue #1 as a reviewable packet candidate. It does not</p>
+<p>claim L3/build-ready status until measured cavity volume, shrinkage, and tuner</p>
+<p>data are added to `validation.csv`.</p>
+
+<h2>Governing Model</h2>
+
+<p>Helmholtz resonance:</p>
+
+<pre><code>
+f = c / (2*pi) * sqrt(A / (V * L_eff))
+L_eff = wall_thickness + end_correction
+end_correction ~= 0.6 * sqrt(A/pi)
+</code></pre>
+
+<p>Variables:</p>
+
+<ul>
+<li>`f`: target frequency in Hz.</li>
+<li>`c`: speed of sound, about 34300 cm/s at 20 C.</li>
+<li>`A`: effective open area in square centimeters.</li>
+<li>`V`: cavity volume in cubic centimeters.</li>
+<li>`L_eff`: effective neck length in centimeters.</li>
+</ul>
+
+<p>For finger-hole notes, `A` is cumulative effective area, not tube length. Hole</p>
+<p>interaction and hand coverage require empirical correction.</p>
+
+<h2>Starter Bodies</h2>
+
+<table>
+<tr><th>Body</th><th>Role</th><th>Volume</th><th>Voicing area</th><th>Target</th><th>Notes</th></tr>
+<tr><td>VF-130-A4</td><td>First lab body</td><td>130 cc</td><td>0.45 cm2</td><td>A4</td><td>Ocarina-style proof body</td></tr>
+<tr><td>VF-95-C5</td><td>Smaller response body</td><td>95 cc</td><td>0.35 cm2</td><td>C5</td><td>Tests higher voice and hand size</td></tr>
+<tr><td>VF-180-G4</td><td>Larger warm body</td><td>180 cc</td><td>0.55 cm2</td><td>G4</td><td>Tests low response and wall stiffness</td></tr>
+</table>
+
+<h2>Finger-Hole Area Plan</h2>
+
+<p>1. Calculate required cumulative area for each target note.</p>
+<p>2. Convert each incremental area into an undersize drill diameter.</p>
+<p>3. Drill small, measure, enlarge, and record the final diameter.</p>
+<p>4. Update the hole-area curve before copying the body into a mold.</p>
+
+<p>Starter scale for VF-130-A4 is a simple major pentatonic: `A4, B4, C#5, E5,</p>
+<p>F#5, A5`. A chromatic fingering chart is out of scope for this L2 pass.</p>
+
+<h2>Ceramic And Prototype Path</h2>
+
+<ul>
+<li>Quick prototype: hand-shaped clay or sealed printed/plaster mockup with</li>
+</ul>
+<p>  water-fill volume measurement.</p>
+<ul>
+<li>Ceramic path: slab or pinch body first; slip-cast mold only after shrinkage</li>
+</ul>
+<p>  and voicing are measured.</p>
+<ul>
+<li>Mold workflow: preserve the existing `mold-workflow.md` notes and add fired</li>
+</ul>
+<p>  shrinkage rows after test tiles.</p>
+
+<h2>SolidWorks/OpenSCAD Handoff</h2>
+
+<p>The CAD handoff should expose volume, voicing area, wall thickness, hole</p>
+<p>diameters, and mold split line as named inputs. A pretty exterior is secondary</p>
+<p>until the Helmholtz measurements agree with the design sheet.</p>
+
+<h2>L2 To L3 Gates</h2>
+
+<ul>
+<li>Actual cavity volume measured within +/-5 cc.</li>
+<li>First sound is stable at low and medium breath pressure.</li>
+<li>Fundamental is within +/-20 cents before tuning holes.</li>
+<li>Tuned pentatonic notes are within +/-10 cents or documented as correction</li>
+</ul>
+<p>  data.</p>
+<ul>
+<li>Fired shrinkage is measured before a slip-cast production mold is claimed.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>bom.csv</h2>
+
+<p>Starter bill of materials with part categories, quantities, drawing refs, and notes.</p>
+
+<table>
+<tr><th>item</th><th>qty</th><th>unit</th><th>estimated_cost</th><th>notes</th></tr>
+<tr><td>Low-fire or mid-fire clay body</td><td>5</td><td>lb</td><td>derived estimate 12</td><td>Enough for two small prototypes and test tiles</td></tr>
+<tr><td>Calibrated syringe or graduated cylinder</td><td>1</td><td>each</td><td>derived estimate 8</td><td>Water-fill cavity volume measurement</td></tr>
+<tr><td>Digital caliper</td><td>1</td><td>each</td><td>shop tool</td><td>Measure hole diameters and wall thickness</td></tr>
+<tr><td>Needle files and reamers</td><td>1</td><td>set</td><td>derived estimate 18</td><td>Gradual hole enlargement</td></tr>
+<tr><td>Small drill index</td><td>1</td><td>set</td><td>derived estimate 20</td><td>Undersize tuning holes</td></tr>
+<tr><td>Plaster for test mold</td><td>5</td><td>lb</td><td>derived estimate 15</td><td>Only after hand-built body validates</td></tr>
+<tr><td>Food-safe shellac or ceramic finish test</td><td>1</td><td>set</td><td>derived estimate 10</td><td>Prototype sealing and surface tests</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>sourcing.csv</h2>
+
+<p>Supplier/search tracker with specs, price/date fields, lead time, substitutes, and risks.</p>
+
+<table>
+<tr><th>item</th><th>required_spec</th><th>search_terms</th><th>preferred_source</th><th>current_check_needed</th><th>substitution_notes</th></tr>
+<tr><td>Clay body</td><td>known shrinkage clay with supplier data</td><td>low fire clay body shrinkage</td><td>ceramic supplier</td><td>yes</td><td>Use same body for test tiles and prototype</td></tr>
+<tr><td>Graduated cylinder</td><td>100 to 250 ml with readable marks</td><td>250 ml graduated cylinder</td><td>lab or craft supplier</td><td>yes</td><td>Syringe acceptable for small cavities</td></tr>
+<tr><td>Needle files</td><td>small round and tapered profiles</td><td>needle file set round tapered</td><td>hardware supplier</td><td>yes</td><td>Needed for controlled hole enlargement</td></tr>
+<tr><td>Drill bits</td><td>number or metric bits under final hole size</td><td>number drill bit set</td><td>tool supplier</td><td>yes</td><td>Undersize holes are required</td></tr>
+<tr><td>Plaster</td><td>mold plaster suitable for slip casting tests</td><td>pottery plaster slip casting</td><td>ceramic supplier</td><td>yes</td><td>Do not buy bulk until shrinkage plan is confirmed</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>cut-list.csv</h2>
+
+<p>Rough/final stock sizes, material, grain/orientation, operations, yield, and offcuts.</p>
+
+<table>
+<tr><th>part</th><th>qty</th><th>material</th><th>rough_dimensions_in</th><th>final_dimensions_in</th><th>operation_notes</th></tr>
+<tr><td>VF-130 clay blank</td><td>2</td><td>clay</td><td>4 x 4 x 3 equivalent</td><td>130 cc cavity with 0.4 cm wall</td><td>Make one playable and one sectioned test</td></tr>
+<tr><td>Test tiles</td><td>3</td><td>clay</td><td>3 x 1 x 0.25</td><td>measured fired shrinkage coupons</td><td>Fire with prototype body</td></tr>
+<tr><td>Voicing test coupon</td><td>2</td><td>clay or sealed scrap</td><td>2 x 2 x 0.5</td><td>window and windway practice</td><td>Use before cutting final body</td></tr>
+<tr><td>Hole-area gauge card</td><td>1</td><td>card or acrylic</td><td>3 x 5</td><td>diameter/area reference</td><td>Keep with tuning tools</td></tr>
+<tr><td>Plaster mold test block</td><td>1</td><td>plaster</td><td>6 x 6 x 3</td><td>small split-line trial</td><td>Only after hand-built validation</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>drawing-brief.md</h2>
+
+<p>Manufacturing drawing and technical product sketch brief.</p>
+
+<h1>Drawing Brief</h1>
+
+<h2>Required Sheets</h2>
+
+<p>1. VF-130-A4 body overview with approximate cavity, voicing, and hand position.</p>
+<p>2. Section view showing cavity volume, wall thickness, windway, and labium.</p>
+<p>3. Finger-hole area chart with undersize drill diameters and final measured</p>
+<p>   diameters.</p>
+<p>4. Mold split-line concept after shrinkage validation.</p>
+
+<h2>Datum Scheme</h2>
+
+<ul>
+<li>A: voicing centerline.</li>
+<li>B: mouthpiece/windway reference face.</li>
+<li>C: body midplane for hole layout and mold split discussion.</li>
+</ul>
+
+<h2>Tolerance Notes</h2>
+
+<p>Volume, voicing, and hole area are validation variables. Drawings should label</p>
+<p>starter dimensions as first-pass values until the measured body is logged.</p>
+
+<div class="page-break"></div>
+
+<h2>assembly-manual.md</h2>
+
+<p>Shop-facing sequence, tools, fixtures, safety, tuning, finishing, and maintenance notes.</p>
+
+<h1>Assembly Manual</h1>
+
+<h2>Scope</h2>
+
+<p>This manual covers the VF-130-A4 lab body. A slip-cast version should wait</p>
+<p>until the hand-built or sealed proof body validates volume, voicing, and hole</p>
+<p>area.</p>
+
+<h2>Steps</h2>
+
+<p>1. Weigh clay and form a simple closed cavity with an inspection/fill opening.</p>
+<p>2. Shape the body around the 130 cc target volume, leaving extra wall thickness</p>
+<p>   near the voicing.</p>
+<p>3. Cut a conservative windway/window and smooth the labium edge.</p>
+<p>4. Measure wet cavity volume by water fill and record in `validation.csv`.</p>
+<p>5. Dry slowly; measure shrinkage against test tiles.</p>
+<p>6. Seal the proof body if needed for first acoustic tests.</p>
+<p>7. Establish first sound before drilling tone holes.</p>
+<p>8. Drill tone holes undersize according to the area plan.</p>
+<p>9. Tune by gradual enlargement, recording final diameters and cents error.</p>
+<p>10. Fire or finish only after the acoustic target is stable.</p>
+<p>11. Re-measure cavity volume after firing or sealing.</p>
+<p>12. Update `mold-workflow.md` with the measured shrinkage before any slip-cast</p>
+<p>    mold is cut.</p>
+
+<h2>Stop Conditions</h2>
+
+<ul>
+<li>Stop if the cavity leaks; pitch observations are meaningless until sealed.</li>
+<li>Stop if volume differs by more than 10 cc; update design before drilling.</li>
+<li>Stop if first sound requires high breath pressure only; adjust voicing before</li>
+</ul>
+<p>  tuning holes.</p>
+
+<div class="page-break"></div>
+
+<h2>validation.csv</h2>
+
+<p>Target/measured values, tolerance, environment, result, and tuning/build action log.</p>
+
+<table>
+<tr><th>check</th><th>target</th><th>method</th><th>tool</th><th>actual</th><th>pass</th><th>notes</th></tr>
+<tr><td>Wet cavity volume</td><td>130 cc +/- 5 cc</td><td>water fill before drying</td><td>graduated cylinder</td><td>pending</td><td>pending</td><td>Record before shrinkage</td></tr>
+<tr><td>Dry/fired shrinkage</td><td>measured percent on test tiles</td><td>measure before/after firing</td><td>caliper</td><td>pending</td><td>pending</td><td>Required before mold claims</td></tr>
+<tr><td>Voicing first sound</td><td>stable tone at low and medium breath</td><td>play test</td><td>shop notes</td><td>pending</td><td>pending</td><td>Fix voicing before drilling scale</td></tr>
+<tr><td>Fundamental A4</td><td>440 Hz +/- 20 cents before tone holes</td><td>tuner at room temp</td><td>tuner</td><td>pending</td><td>pending</td><td>Adjust voicing or volume if far off</td></tr>
+<tr><td>Hole 1 B4</td><td>493.88 Hz +/- 10 cents after tuning</td><td>undersize drill then enlarge</td><td>tuner</td><td>pending</td><td>pending</td><td>Record final diameter</td></tr>
+<tr><td>Hole 2 C#5</td><td>554.37 Hz +/- 10 cents after tuning</td><td>undersize drill then enlarge</td><td>tuner</td><td>pending</td><td>pending</td><td>Track cumulative area</td></tr>
+<tr><td>Hole 3 E5</td><td>659.25 Hz +/- 10 cents after tuning</td><td>undersize drill then enlarge</td><td>tuner</td><td>pending</td><td>pending</td><td>Check hand coverage</td></tr>
+<tr><td>Hole 4 F#5</td><td>739.99 Hz +/- 10 cents after tuning</td><td>undersize drill then enlarge</td><td>tuner</td><td>pending</td><td>pending</td><td>Watch tone stability</td></tr>
+<tr><td>Octave A5</td><td>880 Hz response check</td><td>overblow and fingering test</td><td>tuner</td><td>pending</td><td>pending</td><td>Do not overclaim if unstable</td></tr>
+<tr><td>Leak check</td><td>no leaks around seam or voicing</td><td>water/air leak test</td><td>visual/play test</td><td>pending</td><td>pending</td><td>Seal prototype before judging pitch</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>supplier-rfq.md</h2>
+
+<p>Supplier email/request-for-quote starter.</p>
+
+<h1>Supplier RFQ</h1>
+
+<h2>Request</h2>
+
+<p>Please quote the following public-safe, non-proprietary instrument-build</p>
+<p>materials or fabrication services.</p>
+
+<h2>Items</h2>
+
+<ul>
+<li>Item: TBD</li>
+<li>Quantity: TBD</li>
+<li>Material/spec: TBD</li>
+<li>Tolerance: TBD</li>
+<li>Finish: TBD</li>
+<li>Lead time target: TBD</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>visual-bom-brief.md</h2>
+
+<p>Art direction for an image-forward visual BOM.</p>
+
+<h1>Visual BOM Brief</h1>
+
+<p>Create a one-page visual BOM after the first prototype is shaped. Required</p>
+<p>image panels:</p>
+
+<ul>
+<li>Clay body or proof cavity before closure.</li>
+<li>Water-fill measurement setup.</li>
+<li>Voicing window and labium close-up.</li>
+<li>Drill/reamer set used for tuning holes.</li>
+<li>Test tiles used for shrinkage measurement.</li>
+<li>Final tuned prototype, front and back.</li>
+</ul>
+
+<p>Each panel should link to the validation row it supports.</p>
+
+<div class="page-break"></div>
+
+<h2>wolfram-starter.wl</h2>
+
+<p>Wolfram starter for physics, optimization, visualization, and validation.</p>
+
+<pre><code>
+(* Vessel flute Helmholtz starter: cavity volume and hole area. *)
+
+ClearAll[&quot;Global`*&quot;];
+
+cCmPerSec = 34300;
+a4 = 440;
+volumeCc = 130;
+wallCm = 0.40;
+
+areaCircleCm2[dmm_] := Pi*(dmm/20)^2;
+endCorrectionCm[area_] := 0.6*Sqrt[area/Pi];
+helmholtzHz[area_, volume_, neck_] := (cCmPerSec/(2*Pi))*Sqrt[area/(volume*neck)];
+areaForHz[f_, volume_, neck_] := volume*neck*(2*Pi*f/cCmPerSec)^2;
+centsError[measured_, target_] := 1200*Log[2, measured/target];
+
+baseArea = 0.45;
+baseNeck = wallCm + endCorrectionCm[baseArea];
+baseHz = helmholtzHz[baseArea, volumeCc, baseNeck];
+
+scale = {
+  {&quot;A4&quot;, 440.00},
+  {&quot;B4&quot;, 493.88},
+  {&quot;C#5&quot;, 554.37},
+  {&quot;E5&quot;, 659.25},
+  {&quot;F#5&quot;, 739.99},
+  {&quot;A5&quot;, 880.00}
+};
+
+areaTable = Table[
+  &lt;|
+    &quot;Note&quot; -&gt; note,
+    &quot;TargetHz&quot; -&gt; hz,
+    &quot;CumulativeAreaCm2&quot; -&gt; areaForHz[hz, volumeCc, baseNeck]
+  |&gt;,
+  { {note, hz}, scale}
+];
+
+Dataset[areaTable]
+
+(* Validation reminder: effective hole area must be measured on a prototype;
+   this is not an open-pipe tone-hole model. *)
+</code></pre>
+
+<div class="page-break"></div>
+
+<h2>CHECKLIST.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Public-Ready Checklist</h1>
+
+<h2>Readiness Level</h2>
+
+<ul>
+<li>[ ] L0 Concept: target sound, family, and rough build method are documented.</li>
+<li>[ ] L1 Design: governing equations, assumptions, dimensions, BOM, and sourcing candidates are present.</li>
+<li>[ ] L2 Shop Packet: build sequence, drawings/briefs, cut list, validation checklist, hazards, and artifact paths are complete enough for careful builder review.</li>
+<li>[ ] L3 Validated Packet: validator passes, generated/rendered artifacts open, units are consistent, and sourceability/tolerance claims are checked.</li>
+<li>[ ] L4 Empirical Packet: measured build data, tuning deviations, correction loop, and catalog feedback are included.</li>
+</ul>
+
+<p>Only L3 or L4 work should be described as build-ready.</p>
+
+<h2>Packet Completeness</h2>
+
+<ul>
+<li>[ ] Replace `Vessel Flutes`, `L2 root-mode build packet for Helmholtz vessel flutes: ocarina, xun, gemshorn, and ceramic cavity prototypes.`, and other placeholders.</li>
+<li>[ ] Add cultural attribution and sources of inspiration.</li>
+<li>[ ] Replace placeholder photos with owned photos, renders, or honest public-safe placeholders.</li>
+<li>[ ] Fill `design.md` with instrument-specific governing equations and assumptions.</li>
+<li>[ ] Fill BOM, sourcing, cut list, validation, and family spec rows with non-placeholder values.</li>
+<li>[ ] Add OpenSCAD/SolidWorks/Wolfram handoff notes without pretending final CAD exists.</li>
+<li>[ ] Add drawings and a CNC/setup plan where applicable.</li>
+<li>[ ] Fill `resources.md` with public-safe provenance, education, maker, and license notes.</li>
+<li>[ ] Fill `jig-decision.md` for any make/order/buy/borrow fixture decisions.</li>
+<li>[ ] Run `instrument-maker-v4/scripts/validate_packet.py . --mode root --json`.</li>
+<li>[ ] Confirm no local absolute paths, private repo links, or frozen supplier-price claims.</li>
+</ul>
+
+<h2>Review Evidence</h2>
+
+<ul>
+<li>[ ] PR body includes changed behavior/artifact, physics/manufacturing assumptions, validation run, known gaps, reviewer focus, and do-not-merge-until bar.</li>
+<li>[ ] Physics gate passed: model, assumptions, units, tuning targets, and sensitivity ranges are reviewable.</li>
+<li>[ ] Manufacturing gate passed: toolchain, materials, tolerances, cut lists/jigs/CAD, and assembly order are plausible.</li>
+<li>[ ] Safety gate passed: dust, finishes, adhesives, sharp tools, tension, heat/pressure/electrical risks, and workshop constraints are addressed.</li>
+<li>[ ] Artifact gate passed: BOM, sourcing, cut list, validation, risks, drawings/CAD briefs, and rendered/generated artifacts are present or gaps are named.</li>
+<li>[ ] Empirical gate passed: measurement plan, pass/fail criteria, tuning correction path, and catalog feedback destination are stated.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>README.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Vessel Flutes</h1>
+
+<p>&gt; L2 root-mode build packet for Helmholtz vessel flutes: ocarina, xun,</p>
+<p>&gt; gemshorn-inspired ceramic studies, and quick cavity-volume prototypes.</p>
+
+<p>![Hero photo placeholder](images/README-placeholder.txt)</p>
+
+<h2>What This Is</h2>
+
+<p>This repository documents a vessel-flute build packet where pitch is governed</p>
+<p>primarily by cavity volume, voicing aperture area, and effective neck length,</p>
+<p>not by open-pipe tube length. The first build target is a small ceramic ocarina</p>
+<p>lab body because it can validate volume measurement, voicing response, and</p>
+<p>finger-hole area formulas before more ornate forms are attempted.</p>
+
+<p>The packet is **L2, not L3**. It is a reviewable root-mode packet with formulas,</p>
+<p>shop sequence, and validation gates, but it is not build-ready until a fired or</p>
+<p>prototype body has measured volume, shrinkage, and tuning data.</p>
+
+<p>Refs #1.</p>
+
+<h2>Design Overview</h2>
+
+<table>
+<tr><th>Topic</th><th>Packet decision</th></tr>
+<tr><td>Governing model</td><td>Helmholtz: `f = c/(2*pi) * sqrt(A/(V * L_eff))`</td></tr>
+<tr><td>First prototype</td><td>130 cc ocarina-style lab body</td></tr>
+<tr><td>Voicing</td><td>Rectangular windway/window with measured effective area</td></tr>
+<tr><td>Tuning method</td><td>Drill holes undersize, track cumulative open area, tune by enlargement</td></tr>
+<tr><td>Materials</td><td>Clay slab/pinch prototype first; slip-cast workflow after shrinkage data</td></tr>
+<tr><td>Validation</td><td>Volume fill test, voicing response, scale tuning, shrinkage log</td></tr>
+</table>
+
+<h2>Why Hole Area Matters</h2>
+
+<p>For vessel flutes, a tone hole does not &quot;shorten a tube.&quot; It increases the</p>
+<p>effective open area of the resonator. The practical tuning loop is:</p>
+
+<p>1. measure dry/fired cavity volume;</p>
+<p>2. calculate target cumulative open area for each note;</p>
+<p>3. drill holes undersize;</p>
+<p>4. enlarge holes gradually while measuring pitch;</p>
+<p>5. update the hole-area curve with real data.</p>
+
+<p>This packet keeps that distinction explicit so pipe-flute shortcuts do not</p>
+<p>creep into the vessel-flute workflow.</p>
+
+<h2>Packet Map</h2>
+
+<table>
+<tr><th>Path</th><th>Purpose</th></tr>
+<tr><td>`design.md`</td><td>Helmholtz model, cavity-volume assumptions, hole-area logic</td></tr>
+<tr><td>`family-spec.csv`</td><td>Three starter bodies with volume, aperture, and pitch targets</td></tr>
+<tr><td>`bom.csv`</td><td>Clay/prototype materials, measuring tools, and finish supplies</td></tr>
+<tr><td>`sourcing.csv`</td><td>Supply/spec tracker with live purchasing checks deferred</td></tr>
+<tr><td>`cut-list.csv`</td><td>Clay blanks, gauges, templates, and fixture components</td></tr>
+<tr><td>`assembly-manual.md`</td><td>Prototype sequence from volume target through tuning</td></tr>
+<tr><td>`validation.csv`</td><td>Volume, shrinkage, voicing, and tuning measurements</td></tr>
+<tr><td>`mold-workflow.md`</td><td>Existing ceramic lab context retained for follow-up</td></tr>
+<tr><td>`concept-matrix.csv`</td><td>Existing concept matrix retained as design inputs</td></tr>
+<tr><td>`wolfram-starter.wl`</td><td>Helmholtz and hole-area calculation starter</td></tr>
+</table>
+
+<h2>Build Order</h2>
+
+<p>1. Make a quick clay or sealed prototype body with measurable volume.</p>
+<p>2. Cut a conservative voicing window and establish first sound.</p>
+<p>3. Measure cavity volume by water fill before and after drying/firing when</p>
+<p>   applicable.</p>
+<p>4. Drill tone holes undersize and tune by cumulative open area.</p>
+<p>5. Record fired shrinkage and update the mold/slip-cast plan.</p>
+
+<h2>Status</h2>
+
+<table>
+<tr><th>Area</th><th>Status</th></tr>
+<tr><td>Packet docs</td><td>L2 root-mode candidate</td></tr>
+<tr><td>Ceramic lab notes</td><td>Existing docs retained under `docs/ceramic-vessel-lab/`</td></tr>
+<tr><td>Drawings/CAD</td><td>Drawing brief and mold workflow included</td></tr>
+<tr><td>Photos</td><td>Placeholder only</td></tr>
+<tr><td>Validation</td><td>Planned, no measured prototype yet</td></tr>
+<tr><td>Issue linkage</td><td>Refs #1, does not close #1</td></tr>
+</table>
+
+<h2>License</h2>
+
+<p>[CC BY 4.0](LICENSE) - engineering documentation only.</p>
+
+<div class="page-break"></div>
+
+<h2>concept-matrix.csv</h2>
+
+<p>Project artifact.</p>
+
+<table>
+<tr><th>concept_id</th><th>name</th><th>form</th><th>play_method</th><th>primary_model</th><th>creative_hook</th><th>first_target</th><th>prototype_notes</th></tr>
+<tr><td>VF-01</td><td>Seed Vessel</td><td>Asymmetric seed pod</td><td>fipple</td><td>Single Helmholtz</td><td>Organic small flute with 4-hole pentatonic scale</td><td>A4 to E5</td><td>Best first vessel-flute prototype.</td></tr>
+<tr><td>VF-02</td><td>Water Bird</td><td>Small rounded pod with fill port</td><td>fipple plus water</td><td>Variable-volume Helmholtz</td><td>Pitch bends by changing water volume</td><td>TBD</td><td>Start as sound effect then tune a narrow range.</td></tr>
+<tr><td>VF-03</td><td>Double Pod</td><td>Two connected bulbs</td><td>fipple</td><td>Coupled Helmholtz</td><td>Two chamber colors from one breath</td><td>TBD</td><td>Needs coupled-mode measurement.</td></tr>
+<tr><td>VF-04</td><td>Drone Vessel</td><td>Melody bulb plus drone bulb</td><td>fipple</td><td>Coupled Helmholtz</td><td>Native-flute-like drone in ceramic vessel form</td><td>TBD</td><td>Design drone as fixed port first.</td></tr>
+<tr><td>VF-05</td><td>Transverse Vessel</td><td>Sculptural side-blown vessel</td><td>blow-across edge</td><td>Edge tone plus Helmholtz</td><td>Transverse flute gesture without long bore</td><td>TBD</td><td>Higher risk because embouchure physics dominates.</td></tr>
+<tr><td>VF-06</td><td>Hand-Wah Vessel</td><td>Udu/ocarina hybrid</td><td>fipple plus palm port</td><td>Variable-port Helmholtz</td><td>Hand opens a port for wah effects</td><td>TBD</td><td>Good bridge from udu experiments.</td></tr>
+<tr><td>VF-07</td><td>Shell Labyrinth</td><td>Folded shell-like chamber</td><td>fipple</td><td>Measured-volume Helmholtz</td><td>Complex outside shape with simple acoustic volume</td><td>TBD</td><td>Great 3D mold showcase if release is solved.</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>experiments.csv</h2>
+
+<p>Project artifact.</p>
+
+<table>
+<tr><th>experiment_id</th><th>question</th><th>controlled_variables</th><th>changed_variable</th><th>measurements</th><th>success_criteria</th><th>next_action</th></tr>
+<tr><td>VF-EXP-001</td><td>How accurately does the Helmholtz model predict fired vessel flutes?</td><td>fipple geometry; hole area; clay body; firing schedule</td><td>chamber volume</td><td>green/bisque/fired volume and pitch</td><td>Prediction within +/-50 cents after empirical correction</td><td>Fit correction factor for this clay and voicing.</td></tr>
+<tr><td>VF-EXP-002</td><td>How much does wall thickness matter?</td><td>chamber CAD; port geometry; fipple; clay body</td><td>casting drain time and wall thickness</td><td>mass; wall sample; tap tone; pitch; response</td><td>Identify thickness range with good tone and low cracking</td><td>Update mold workflow with drain-time targets.</td></tr>
+<tr><td>VF-EXP-003</td><td>Can different shapes with equal volume tune similarly?</td><td>volume; port area; fipple geometry; wall target</td><td>external chamber shape</td><td>pitch; tone color; response threshold</td><td>Pitch similar but timbre measurably different</td><td>Choose best shape for production.</td></tr>
+<tr><td>VF-EXP-004</td><td>Can water fill create controllable musical bends?</td><td>body; port; fipple; hole area</td><td>water volume and tilt angle</td><td>pitch sweep; leak behavior; playability</td><td>Smooth repeatable bend over useful interval</td><td>Design fill mark and leak-safe plug.</td></tr>
+<tr><td>VF-EXP-005</td><td>Can a replaceable fipple cartridge work?</td><td>chamber; holes; clay body</td><td>insert geometry</td><td>response threshold; pitch stability; noise</td><td>One insert speaks reliably across multiple bodies</td><td>Create insert drawing and tolerance table.</td></tr>
+<tr><td>VF-EXP-006</td><td>Can a drone chamber share breath with melody chamber?</td><td>melody chamber; fipple; clay body</td><td>drone volume/port area</td><td>two-note stability; beating; breath demand</td><td>Stable drone without choking melody</td><td>Move to coupled-resonator model.</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>family-spec.csv</h2>
+
+<p>Project artifact.</p>
+
+<table>
+<tr><th>member_id</th><th>name</th><th>target_note</th><th>target_hz</th><th>volume_cc</th><th>voicing_area_cm2</th><th>wall_cm</th><th>estimated_neck_cm</th><th>material_path</th><th>status</th></tr>
+<tr><td>VF-130-A4</td><td>Ocarina lab body</td><td>A4</td><td>440.00</td><td>130</td><td>0.45</td><td>0.40</td><td>0.63</td><td>hand-built clay or sealed proof body</td><td>first prototype</td></tr>
+<tr><td>VF-95-C5</td><td>Small vessel response body</td><td>C5</td><td>523.25</td><td>95</td><td>0.35</td><td>0.35</td><td>0.55</td><td>hand-built clay</td><td>after VF-130</td></tr>
+<tr><td>VF-180-G4</td><td>Large warm vessel body</td><td>G4</td><td>392.00</td><td>180</td><td>0.55</td><td>0.45</td><td>0.70</td><td>slab or slip-cast study</td><td>after shrinkage data</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>jig-decision.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Jig Decision</h1>
+
+<table>
+<tr><th>Operation</th><th>Jig choice</th><th>Reason</th><th>Release check</th></tr>
+<tr><td>Volume measurement</td><td>Graduated fill setup</td><td>Directly measures governing variable</td><td>Repeat fill within 2 cc</td></tr>
+<tr><td>Voicing cut</td><td>Coupon-first hand guide</td><td>Voicing is empirical and fragile</td><td>Coupon speaks before body cut</td></tr>
+<tr><td>Hole drilling</td><td>Hand drill with area gauge</td><td>Allows gradual hole enlargement</td><td>Final diameter recorded after tuning</td></tr>
+<tr><td>Shrinkage test</td><td>Test-tile board</td><td>Couples every firing to a measured shrinkage row</td><td>Tile dimensions logged before/after</td></tr>
+<tr><td>Mold planning</td><td>Split-line sketch only at L2</td><td>Mold is premature before shrinkage data</td><td>Promote after prototype validation</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>mold-workflow.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Vessel Flute Mold Workflow</h1>
+
+<h2>CAD First Principles</h2>
+
+<ul>
+<li>Model the **inside air volume** intentionally, not just the exterior sculpture.</li>
+<li>Keep a named chamber-volume parameter or a repeatable CAD volume report.</li>
+<li>Avoid true undercuts unless using a multi-part mold.</li>
+<li>Add shrinkage compensation as a configurable scale factor.</li>
+<li>Design the split line before falling in love with the outside form.</li>
+<li>Put fipple and hole features in locations that can be cleaned, measured, and tuned.</li>
+</ul>
+
+<h2>Master Print</h2>
+
+<p>1. Print at high enough resolution that fipple and port areas are not stair-stepped.</p>
+<p>2. Sand and seal the master completely.</p>
+<p>3. Measure master dimensions and compare with CAD.</p>
+<p>4. Mark split line, datums, and build ID.</p>
+
+<h2>Plaster Mold</h2>
+
+<p>1. Choose 2-piece mold for simple pods and 3-piece mold for forms with more dramatic shoulders.</p>
+<p>2. Use registration keys that release cleanly and do not create stress risers.</p>
+<p>3. Keep plaster thick enough for strength but not so massive that drying takes forever.</p>
+<p>4. Dry the mold fully before judging casting performance.</p>
+
+<h2>Casting Controls</h2>
+
+<ul>
+<li>Record slip batch.</li>
+<li>Record pour time, drain time, room temperature, and humidity if available.</li>
+<li>Measure wall thickness from a sacrificial rim or test coupon.</li>
+<li>Use the same drain orientation for each comparison build.</li>
+</ul>
+
+<h2>Fipple Strategy Options</h2>
+
+<table>
+<tr><th>Strategy</th><th>Pros</th><th>Cons</th><th>Use for</th></tr>
+<tr><td>Molded fipple</td><td>Repeatable once solved</td><td>Hard to release and clean</td><td>Later production</td></tr>
+<tr><td>Hand-cut fipple</td><td>Fast iteration</td><td>More variable</td><td>First prototypes</td></tr>
+<tr><td>Insert/cartridge</td><td>Easy A/B testing</td><td>Adds fit tolerance problem</td><td>Physics experiments</td></tr>
+<tr><td>Printed sacrificial guide</td><td>Helps locate cuts</td><td>Must be removed cleanly</td><td>Early mold learning</td></tr>
+</table>
+
+<h2>Mold-Release Design Rules</h2>
+
+<ul>
+<li>Organic outside forms are fine if every mold segment has a pull direction.</li>
+<li>Texture should be shallow until the release behavior is proven.</li>
+<li>Avoid thin raised details near the mouthpiece, hole edges, and split line.</li>
+<li>Keep the first prototype simpler than the final sculpture; prove tone first, then make it wild.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>photo-shotlist.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Photo Shotlist</h1>
+
+<ul>
+<li>Hero image of completed instrument or honest concept placeholder.</li>
+<li>Scale reference with ruler/calipers.</li>
+<li>Material blank before cutting.</li>
+<li>Key operations and jigs.</li>
+<li>Detail shots of acoustic features.</li>
+<li>Final validation setup.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>resources.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Resources</h1>
+
+<h2>Engineering References To Gather Before L3</h2>
+
+<ul>
+<li>Measured ocarina or vessel-flute cavity volumes and voicing dimensions.</li>
+<li>Ceramic body shrinkage data for the exact clay and firing schedule.</li>
+<li>Finger-hole area calculation references and measured correction curves.</li>
+<li>Photos or drawings of voicing geometry with reuse permission.</li>
+</ul>
+
+<h2>Existing Local Context</h2>
+
+<ul>
+<li>`docs/ceramic-vessel-lab/` contains previous ceramic vessel-lab notes that</li>
+</ul>
+<p>  should be preserved as design history.</p>
+<ul>
+<li>`concept-matrix.csv` and `experiments.csv` remain useful intake artifacts.</li>
+<li>`mold-workflow.md` is the right place to promote measured shrinkage into the</li>
+</ul>
+<p>  slip-casting path.</p>
+
+<h2>Related Repos</h2>
+
+<ul>
+<li>`tonykoop/ocarina` for single-instrument Helmholtz packet style.</li>
+<li>`tonykoop/gemshorn` for slip-cast vessel-flute family handling.</li>
+<li>`tonykoop/udu` for ceramic cavity-volume measurement discipline.</li>
+<li>`tonykoop/instrument-maker` for formulas and validation scripts.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>review-evidence.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Review Evidence</h1>
+
+<p>Refs #1.</p>
+
+<h2>Round 3 Scope</h2>
+
+<ul>
+<li>Added an L2 root-mode build packet scaffold and hand-tuned it for</li>
+</ul>
+<p>  vessel-flute specifics: Helmholtz cavity volume, effective hole area,</p>
+<p>  voicing response, ceramic shrinkage, mold timing, and ocarina-style</p>
+<p>  prototype validation.</p>
+<ul>
+<li>Existing ceramic vessel-lab notes were preserved under `docs/`.</li>
+<li>This packet does not claim L3/build-ready status.</li>
+</ul>
+
+<h2>Gates Before Close</h2>
+
+<ul>
+<li>Measure wet/dry/fired cavity volume and shrinkage.</li>
+<li>Record first-sound behavior, cumulative hole areas, tuned cents error, and</li>
+</ul>
+<p>  leak checks in `validation.csv`.</p>
+<ul>
+<li>Promote slip-cast mold work only after the lab body validates.</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>risks.md</h2>
+
+<p>Project artifact.</p>
+
+<h1>Risks</h1>
+
+<table>
+<tr><th>ID</th><th>Category</th><th>Risk</th><th>Verification test</th><th>Mitigation</th></tr>
+<tr><td>VF-AC-01</td><td>Acoustic</td><td>Pipe-flute length logic is accidentally applied to a vessel flute</td><td>Design review checks Helmholtz area/volume formula</td><td>Keep hole-area table visible in packet</td></tr>
+<tr><td>VF-AC-02</td><td>Acoustic</td><td>Voicing does not speak cleanly</td><td>First-sound test before tuning holes</td><td>Adjust window/labium on coupon first</td></tr>
+<tr><td>VF-ST-01</td><td>Structural</td><td>Clay shrinks or warps enough to invalidate holes</td><td>Test-tile shrinkage and post-fire volume</td><td>Do not cut mold before shrinkage data</td></tr>
+<tr><td>VF-ER-01</td><td>Ergonomic</td><td>Holes tune correctly but are not coverable</td><td>Paper hand-layout and clay mock grip</td><td>Favor four-hole pentatonic starter</td></tr>
+<tr><td>VF-SU-01</td><td>Supply</td><td>Clay body changes shrinkage or porosity</td><td>Record supplier/body name and firing cone</td><td>Keep test tiles with every material batch</td></tr>
+<tr><td>VF-FI-01</td><td>Fit/finish</td><td>Surface leaks shift pitch</td><td>Water/air leak test</td><td>Seal proof body before evaluating tuning</td></tr>
+</table>
+</body></html>
