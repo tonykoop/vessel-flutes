@@ -1,0 +1,97 @@
+{
+  "schema": "instrument-maker.helmholtz-gates.v1",
+  "packet_status": "model_boundary_and_measurement_requirements_only",
+  "issue": "tonykoop/vessel-flutes#1",
+  "calibration_status": "uncalibrated",
+  "readiness": "L2_model_pending_first_measured_prototype",
+  "model": {
+    "name": "Helmholtz resonator",
+    "equation": "f = c / (2*pi) * sqrt(A / (V * L_eff))",
+    "end_correction_approximation": "L_eff = wall_thickness + 0.6 * sqrt(A/pi)",
+    "provenance": [
+      "design.md governing model section",
+      "Helmholtz acoustic resonance closed-form approximation"
+    ],
+    "ambient_assumptions": {
+      "temperature_C": 20,
+      "speed_of_sound_cm_per_s": 34300,
+      "humidity": "unspecified",
+      "altitude": "unspecified"
+    }
+  },
+  "validity_boundary": {
+    "cavity_geometry": "single closed cavity with small aperture relative to cavity diameter",
+    "aperture_to_cavity_ratio_max": "approximately 0.1 of cavity equivalent diameter; above this the lumped-element model degrades",
+    "frequency_band_target_Hz": {
+      "min": 200,
+      "max": 1500,
+      "note": "Closed-form Helmholtz approximation degrades outside this band for typical vessel-flute geometries; treat extrapolations as untrusted."
+    },
+    "hole_interaction": "Closed-form cumulative-area model ignores hole-hole interaction; empirical correction required from tuning log.",
+    "non_rigid_walls": "Thin or compliant walls shift resonance below predicted f; flag in tuning log when wall thickness < 4 mm or material is unfired clay.",
+    "moisture_and_temperature_drift": "Pitch drifts with breath moisture and ambient temperature; record both with every tuning row."
+  },
+  "measurement_requirements": [
+    {
+      "id": "cavity_volume",
+      "label": "Cavity volume V (cm^3)",
+      "status": "unknown_must_measure",
+      "method": "water-fill before drying; repeat after fire/cure for shrinkage delta",
+      "tool": "graduated cylinder; +/- 5 cc tolerance",
+      "blocks": ["fundamental_frequency_prediction", "L3_promotion"]
+    },
+    {
+      "id": "aperture_effective_area",
+      "label": "Voicing aperture effective area A (cm^2)",
+      "status": "unknown_must_measure",
+      "method": "measure window width x cut-up height with calipers; record effective vs nominal area",
+      "tool": "calipers; +/- 0.05 cm",
+      "blocks": ["fundamental_frequency_prediction"]
+    },
+    {
+      "id": "neck_length_effective",
+      "label": "Effective neck length L_eff (cm)",
+      "status": "unknown_must_measure_or_compute",
+      "method": "L_eff = wall_thickness + end_correction; measure wall_thickness with caliper; compute end_correction from measured A",
+      "tool": "calipers",
+      "blocks": ["fundamental_frequency_prediction"]
+    },
+    {
+      "id": "wall_thickness",
+      "label": "Wall thickness at aperture (mm)",
+      "status": "unknown_must_measure",
+      "method": "caliper at three points around aperture; record min/mean/max",
+      "tool": "calipers",
+      "blocks": ["L_eff_computation", "non_rigid_walls_flag"]
+    },
+    {
+      "id": "material_and_fire_state",
+      "label": "Material and fire/cure state",
+      "status": "unknown_must_record",
+      "method": "record clay body, slip, or prototype substrate; record greenware/bisque/fired/glazed state",
+      "tool": "shop log",
+      "blocks": ["shrinkage_correction", "non_rigid_walls_flag"]
+    },
+    {
+      "id": "shrinkage_factor",
+      "label": "Wet-to-fired shrinkage (%)",
+      "status": "unknown_must_measure",
+      "method": "measure test tile before and after firing; compute linear and volumetric shrinkage",
+      "tool": "calipers; test tiles",
+      "blocks": ["mold_workflow_promotion"]
+    }
+  ],
+  "first_tuning_log_gate": {
+    "file": "tuning-log.csv",
+    "status": "stub_only_no_rows_logged",
+    "promotion_rule": "Promote model from 'uncalibrated' to 'first_calibration_pending_replication' only after one prototype body has at least cavity_volume, aperture, neck, wall_thickness, and fundamental_Hz rows recorded with measured (not pending) values.",
+    "honesty_rule": "Do not backfill measured-looking numbers; rows must come from a real prototype or stay marked 'pending'."
+  },
+  "out_of_scope_for_this_packet": [
+    "Calibrated tuning curves",
+    "Production slip-cast mold dimensions",
+    "Cross-body family pitch promises",
+    "Chromatic fingering charts",
+    "Hole-interaction correction tables"
+  ]
+}

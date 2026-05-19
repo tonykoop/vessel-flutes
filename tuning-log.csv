@@ -1,0 +1,2 @@
+prototype_id,body_label,date_iso,ambient_temp_C,ambient_rh_pct,cavity_volume_cc,aperture_area_cm2,neck_length_cm,wall_thickness_mm,material,fire_state,target_note,target_Hz,measured_Hz,cents_offset,breath_pressure_qualitative,tuner_model,observer,notes,status
+,,,,,,,,,,,,,,,,,No prototype measured yet; this file is a stub gate so future rows can be appended honestly.,stub
