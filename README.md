@@ -19,6 +19,20 @@ prototype body has measured volume, shrinkage, and tuning data.
 
 Refs #1.
 
+## Calibration Status
+
+**This is not a calibrated vessel flute design.** The Helmholtz model in
+`design.md` is closed-form and uncalibrated. Cavity volume, voicing aperture,
+effective neck length, wall thickness, and material/fire state are all unknowns
+that must be measured on a real prototype before any pitch claim is treated as
+trustworthy.
+
+- `helmholtz-gates.json` records the model's validity boundary, ambient
+  assumptions, and measurement requirements that block L3 promotion.
+- `tuning-log.csv` is a header-only stub. Rows are appended only from real
+  prototype measurements; pending or guessed values stay marked `pending` or
+  `stub`, never measured-looking.
+
 ## Design Overview
 
 | Topic | Packet decision |
@@ -58,6 +72,8 @@ creep into the vessel-flute workflow.
 | `mold-workflow.md` | Existing ceramic lab context retained for follow-up |
 | `concept-matrix.csv` | Existing concept matrix retained as design inputs |
 | `wolfram-starter.wl` | Helmholtz and hole-area calculation starter |
+| `helmholtz-gates.json` | Model boundary, ambient assumptions, and measurement requirements |
+| `tuning-log.csv` | Header-only stub for first measured tuning row |
 
 ## Build Order
 
