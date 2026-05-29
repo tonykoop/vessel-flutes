@@ -1,5 +1,7 @@
 # Vessel Flutes
 
+**Status: L2 V5 build-packet candidate.** Helmholtz vessel flute packet with design documents, BOM, Wolfram source, and Helmholtz validation gates. Not build-ready until volume/voicing measurements close the gates in `helmholtz-gates.json` and `validation.csv`. No dimensioned drawings or renders generated yet.
+
 > L2 root-mode build packet for Helmholtz vessel flutes: ocarina, xun,
 > gemshorn-inspired ceramic studies, and quick cavity-volume prototypes.
 
