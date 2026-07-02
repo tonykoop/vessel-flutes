@@ -1,0 +1,34 @@
+{
+  "product": "vessel-flutes",
+  "pipeline": "studiopipeline:evolution-pipeline",
+  "stage": "0-intake",
+  "master_revision": "rev-A (pre-commit intake, 2026-07-01)",
+  "generated": "2026-07-01",
+  "cad_masters": [
+    {
+      "path": "cad/vessel-flutes.scad",
+      "format": "openscad-source",
+      "sha256": "715dc841216d2e37a245d1d2480d49b5b57330c5c93b2f8f45285571b8ee5f6d",
+      "authority": "pending_measurement",
+      "lossy": false,
+      "notes": "Parametric Helmholtz-envelope master authored this pass from family-spec.csv (volume/wall/voicing-area/neck). Volume-matched spherical cavity proxy; exterior body form + voicing/fipple/finger-hole geometry out of scope (hand-refined). Renders clean in OpenSCAD."
+    },
+    {
+      "path": "vessel-flutes-starter.wl",
+      "format": "wolfram-source",
+      "sha256": "a8aed870b68e39a97fc6c9d5c5d0bb9e6aa68fcede53fa2867df80c8e1894aa4",
+      "authority": "derived_preview",
+      "lossy": false,
+      "notes": "Instrument-specific Wolfram starter; source-only (not executed). L2 evidence."
+    },
+    {
+      "path": "family-spec.csv",
+      "format": "design-table",
+      "sha256": "0eec5e36487be8d7870e3b22bb08b4b761fd7c2406b27caedc70444bdcceb9a4",
+      "authority": "pending_measurement",
+      "lossy": false,
+      "notes": "Family geometry summary (volume_cc, voicing_area_cm2, wall_cm, estimated_neck_cm per member). No xlsx design table exists; this CSV is the current dimensional summary. Measurement-required until Helmholtz gates close."
+    }
+  ],
+  "notes": "OpenSCAD envelope source + family-spec are the current masters; no STEP export yet. The defining acoustic dimension (cavity volume) is measurement-gated until fired/prototype volume, shrinkage, and tuning data land (helmholtz-gates.json, validation.csv). Gate A (Alpha workspace compile) not yet run."
+}
